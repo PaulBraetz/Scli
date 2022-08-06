@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestApp": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"//"-r ARG1 --second-parameter ARG2 -l -b true"
+    }
+  }
+}
