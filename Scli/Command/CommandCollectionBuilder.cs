@@ -21,7 +21,7 @@ namespace Scli.Command
 		{
 			_ = Append(commands);
 		}
-		public CommandCollectionBuilder(UInt32 startAtKey, ISet<UInt32> keysTaken = null)
+		public CommandCollectionBuilder(UInt32 startAtKey, ISet<UInt32>? keysTaken = null)
 		{
 			_keysTaken = keysTaken ?? new HashSet<UInt32>();
 			_lastKey = startAtKey;
@@ -50,7 +50,7 @@ namespace Scli.Command
 
 			foreach (var command in commands)
 			{
-				Append(command);
+				_ = Append(command);
 			}
 
 			return this;
@@ -63,7 +63,7 @@ namespace Scli.Command
 				.Select(t => t.index)
 				.Concat(_keysTaken));
 
-			UInt32 key = Math.Max(keysTaken.OrderBy(i => i).FirstOrDefault(), _lastKey);
+			var key = Math.Max(keysTaken.OrderBy(i => i).FirstOrDefault(), _lastKey);
 
 			var commands = _factories.Select(f =>
 				{
@@ -76,7 +76,7 @@ namespace Scli.Command
 					var command = f.Invoke(navigationKey);
 					if (command.NavigationKey == navigationKey)
 					{
-						keysTaken.Add(key);
+						_ = keysTaken.Add(key);
 					}
 
 					return command;
@@ -89,7 +89,7 @@ namespace Scli.Command
 			_lastKey = key;
 			foreach (var keyTaken in keysTaken)
 			{
-				_keysTaken.Add(keyTaken);
+				_ = _keysTaken.Add(keyTaken);
 			}
 
 			return commands;

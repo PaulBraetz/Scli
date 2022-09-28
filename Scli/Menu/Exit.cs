@@ -1,5 +1,4 @@
 ﻿using Fort;
-using Scli.Menu;
 
 namespace Scli.Menu
 {
