@@ -10,7 +10,7 @@ namespace Scli
 
 			Value = value;
 			Definition = definition;
-			String? valueString = Helpers.GetValueString(value);
+			var valueString = Helpers.GetValueString(value);
 			_message = $"{definition.GetNameString()} received invalid value {valueString}";
 		}
 

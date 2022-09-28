@@ -62,8 +62,8 @@ namespace Scli
 
 				public override String ToString()
 				{
-					String nameString = this.GetNameString();
-					String? descriptionString = Description != null ? $": {Description}" : Description;
+					var nameString = this.GetNameString();
+					var descriptionString = Description != null ? $": {Description}" : Description;
 					return $"{nameString}{descriptionString}";
 				}
 			}

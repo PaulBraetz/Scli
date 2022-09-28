@@ -17,27 +17,27 @@ namespace Scli
 					var cliArgsList = cliArgs.ToList();
 					var args = new List<IArgument>();
 
-					foreach (IParameter parameter in parameters)
+					foreach (var parameter in parameters)
 					{
 						try
 						{
-							String? name = cliArgsList.SingleOrDefault(a => a == parameter.ShortName || a == parameter.LongName);
+							var name = cliArgsList.SingleOrDefault(a => a == parameter.ShortName || a == parameter.LongName);
 
 							if (name != null)
 							{
-								Int32 index = cliArgsList.IndexOf(name);
-								String? value = cliArgsList.Count > index + 1 ? cliArgsList[index + 1] : null;
-								Boolean isValidValue = value != null && !value.StartsWith('-');
+								var index = cliArgsList.IndexOf(name);
+								var value = cliArgsList.Count > index + 1 ? cliArgsList[index + 1] : null;
+								var isValidValue = value != null && !value.StartsWith('-');
 
 								IArgument arg = isValidValue ?
 									new Argument(value, parameter) :
 									new Argument(null, parameter);
 
 								args.Add(arg);
-								cliArgsList.Remove(name);
+								_ = cliArgsList.Remove(name);
 								if (isValidValue)
 								{
-									cliArgsList.Remove(value!);
+									_ = cliArgsList.Remove(value!);
 								}
 							}
 						}
@@ -72,7 +72,7 @@ namespace Scli
 
 				public Boolean TryGet<TValue>(String shortName, Func<String?, TValue> parser, out TValue? value)
 				{
-					if (TryGet(shortName, out IArgument? argument))
+					if (TryGet(shortName, out var argument))
 					{
 						value = parser.Invoke(argument!.Value);
 						return true;

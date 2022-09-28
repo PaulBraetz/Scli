@@ -20,7 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RhoMicro.Fort" Version="1.0.0" />
+    <PackageReference Include="RhoMicro.Fort" Version="1.1.1" />
+    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

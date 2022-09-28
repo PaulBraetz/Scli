@@ -54,7 +54,7 @@ namespace Scli
 
 					public override String ToString()
 					{
-						String valueString = Helpers.GetValueString(Value);
+						var valueString = Helpers.GetValueString(Value);
 						return $"{Definition.ShortName} = {valueString}";
 					}
 				}

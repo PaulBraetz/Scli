@@ -28,10 +28,10 @@ namespace Scli
 						return false;
 					}
 
-					_names.Add(parameter.LongName);
+					_ = _names.Add(parameter.LongName);
 				}
 
-				_names.Add(parameter.ShortName);
+				_ = _names.Add(parameter.ShortName);
 
 				_parameters.Add(parameter);
 
@@ -40,16 +40,16 @@ namespace Scli
 
 			public Boolean TryRemove(String shortName)
 			{
-				IParameter? parameter = _parameters.FirstOrDefault(p => p.ShortName == $"-{shortName}");
+				var parameter = _parameters.FirstOrDefault(p => p.ShortName == $"-{shortName}");
 				if (parameter == null)
 				{
 					return false;
 				}
 
-				_names.Remove(parameter.ShortName);
-				_names.Remove(parameter.LongName);
+				_ = _names.Remove(parameter.ShortName);
+				_ = _names.Remove(parameter.LongName);
 
-				_parameters.Remove(parameter);
+				_ = _parameters.Remove(parameter);
 
 				return true;
 			}
@@ -74,29 +74,29 @@ namespace Scli
 			}
 			public override String ToString()
 			{
-				Int32 rightPadding = _parameters.Select(p => p.GetNameString().Length).OrderBy(p => p).Last();
-				String nameHeader = "Name";
-				String arrow = "    ";
+				var rightPadding = _parameters.Select(p => p.GetNameString().Length).OrderBy(p => p).Last();
+				var nameHeader = "Name";
+				var arrow = "    ";
 
 				rightPadding = Math.Clamp(rightPadding, nameHeader.Length, Int32.MaxValue);
 
 				var builder = new StringBuilder("Parameters:\n\t");
 
-				builder.Append(nameHeader.PadRight(rightPadding + arrow.Length))
+				_ = builder.Append(nameHeader.PadRight(rightPadding + arrow.Length))
 					.Append("Description");
 
-				foreach (IParameter parameter in _parameters)
+				foreach (var parameter in _parameters)
 				{
-					builder.Append("\n\t");
+					_ = builder.Append("\n\t");
 					if (parameter.Description != null)
 					{
-						builder.Append(parameter.GetNameString().PadRight(rightPadding))
+						_ = builder.Append(parameter.GetNameString().PadRight(rightPadding))
 							.Append(arrow)
 							.Append(parameter.Description);
 					}
 					else
 					{
-						builder.Append(parameter.GetNameString());
+						_ = builder.Append(parameter.GetNameString());
 					}
 				}
 
