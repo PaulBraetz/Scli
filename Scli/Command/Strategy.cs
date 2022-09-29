@@ -2,7 +2,7 @@
 
 namespace Scli.Command
 {
-	public sealed class Strategy : CommandBase
+	public class Strategy : CommandBase
 	{
 		public Strategy(String name, Action strategy, String navigationKey = "-1") : base(name)
 		{

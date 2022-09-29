@@ -9,7 +9,7 @@
 	  <Description>A primitive command line interface library.</Description>
 	  <Copyright>2022</Copyright>
 	  <PackageTags>Rhomicro</PackageTags>
-	  <Version>1.1.0</Version>
+	  <Version>1.2.0</Version>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageId>RhoMicro.Scli</PackageId>
 	  <AssemblyName>Scli</AssemblyName>

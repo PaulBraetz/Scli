@@ -1,5 +1,6 @@
 ﻿using Fort;
 using Scli.Command;
+using Scli.Menu;
 
 namespace Scli
 {
@@ -14,15 +15,15 @@ namespace Scli
 		{
 			value?.Print(e => $"an error has occured: {value}");
 		}
-		public static Boolean TryRun(this ICommand command, String navigationKey)
+		public static Boolean TryRun(this ICommand action, String navigationKey)
 		{
 			navigationKey.ThrowIfDefault(nameof(navigationKey));
 
-			if (command.NavigationKey == navigationKey)
+			if (action.NavigationKey == navigationKey)
 			{
 				try
 				{
-					command.Run();
+					action.Run();
 				}
 				catch (Exception ex)
 				{
@@ -33,6 +34,18 @@ namespace Scli
 			}
 
 			return false;
+		}
+		public static CommandCollectionBuilder<ICommand> Append(this CommandCollectionBuilder<ICommand> builder, String name, Action action)
+		{
+			return builder.Append(k => new Strategy(name, action, k));
+		}
+		public static CommandCollectionBuilder<IMenu> Append(this CommandCollectionBuilder<IMenu> builder, String name, IEnumerable<IMenu>? children = null, IEnumerable<ICommand>? actions = null, String backName = "Back")
+		{
+			return builder.Append(k => new Menu.Menu(name, children ?? Array.Empty<IMenu>(), actions ?? Array.Empty<ICommand>(), k, backName));
+		}
+		public static CommandCollectionBuilder<ICommand> AppendConfirmation(this CommandCollectionBuilder<ICommand> builder, String name, Action action, String prompt = "Please Confirm", String confirm = "y", String deny = null)
+		{
+			return builder.Append(k => new Confirmation(name, action, prompt, confirm, deny, k));
 		}
 
 		public static String GetNameString(this IParameter parameter)

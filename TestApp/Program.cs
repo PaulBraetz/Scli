@@ -1,4 +1,5 @@
-﻿using Scli.Command;
+﻿using Scli;
+using Scli.Command;
 using Scli.Menu;
 
 namespace TestApp
@@ -17,15 +18,15 @@ namespace TestApp
 		{
 			new CommandCollectionBuilder<IMenu>(10)
 				.Append(Children)
-				.Append(k => new Menu("SubMenu 1", Array.Empty<IMenu>(), Array.Empty<ICommand>(), k))
-				.Append(k => new Menu("SubMenu 2", Array.Empty<IMenu>(), Array.Empty<ICommand>(), k))
-				.Append(k => new Menu("SubMenu 3", Array.Empty<IMenu>(), Array.Empty<ICommand>(), k))
+				.Append("SubMenu 1", Array.Empty<IMenu>(), Array.Empty<ICommand>())
+				.Append("SubMenu 2", Array.Empty<IMenu>(), Array.Empty<ICommand>())
+				.Append("SubMenu 3", Array.Empty<IMenu>(), Array.Empty<ICommand>())
 				.Build(out var children)
 				.Next<ICommand>()
 				.Append(Actions)
-				.Append(k => new Strategy("Echo", () => Console.WriteLine(Read("input: ")), k))
-				.Append(k => new Strategy("ToLower", () => Console.WriteLine(Read("input: ").ToLowerInvariant()), k))
-				.Append(k => new Strategy("ToUpper", () => Console.WriteLine(Read("input: ").ToUpperInvariant()), k))
+				.AppendConfirmation("Echo", () => Console.WriteLine(Read("input: ")), "Do you really want to do this?")
+				.Append("ToLower", () => Console.WriteLine(Read("input: ").ToLowerInvariant()))
+				.Append("ToUpper", () => Console.WriteLine(Read("input: ").ToUpperInvariant()))
 				.Build(out var actions);
 
 			Children = children;

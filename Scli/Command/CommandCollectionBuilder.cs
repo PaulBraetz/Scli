@@ -13,13 +13,13 @@ namespace Scli.Command
 		{
 			_ = Append(factory);
 		}
-		public CommandCollectionBuilder(T command)
+		public CommandCollectionBuilder(T action)
 		{
-			_ = Append(command);
+			_ = Append(action);
 		}
-		public CommandCollectionBuilder(IEnumerable<T> commands)
+		public CommandCollectionBuilder(IEnumerable<T> actions)
 		{
-			_ = Append(commands);
+			_ = Append(actions);
 		}
 		public CommandCollectionBuilder(UInt32 startAtKey, ISet<UInt32>? keysTaken = null)
 		{
@@ -27,7 +27,7 @@ namespace Scli.Command
 			_lastKey = startAtKey;
 		}
 
-		private readonly ICollection<T> _commands = new List<T>();
+		private readonly ICollection<T> _actions = new List<T>();
 		private readonly ICollection<Func<String, T>> _factories = new List<Func<String, T>>();
 		private readonly ISet<UInt32> _keysTaken = new HashSet<UInt32>();
 		private UInt32 _lastKey = 0;
@@ -38,19 +38,19 @@ namespace Scli.Command
 			_factories.Add(factory);
 			return this;
 		}
-		public CommandCollectionBuilder<T> Append(T command)
+		public CommandCollectionBuilder<T> Append(T action)
 		{
-			command.ThrowIfDefault(nameof(command));
-			_commands.Add(command);
+			action.ThrowIfDefault(nameof(action));
+			_actions.Add(action);
 			return this;
 		}
-		public CommandCollectionBuilder<T> Append(IEnumerable<T> commands)
+		public CommandCollectionBuilder<T> Append(IEnumerable<T> actions)
 		{
-			commands.ThrowIfDefault(nameof(commands));
+			actions.ThrowIfDefault(nameof(actions));
 
-			foreach (var command in commands)
+			foreach (var action in actions)
 			{
-				_ = Append(command);
+				_ = Append(action);
 			}
 
 			return this;
@@ -58,14 +58,14 @@ namespace Scli.Command
 
 		public IEnumerable<T> Build()
 		{
-			var keysTaken = new HashSet<UInt32>(_commands.Select(c => (success: UInt32.TryParse(c.NavigationKey, out var i), index: i))
+			var keysTaken = new HashSet<UInt32>(_actions.Select(c => (success: UInt32.TryParse(c.NavigationKey, out var i), index: i))
 				.Where(t => t.success)
 				.Select(t => t.index)
 				.Concat(_keysTaken));
 
 			var key = Math.Max(keysTaken.OrderBy(i => i).FirstOrDefault(), _lastKey);
 
-			var commands = _factories.Select(f =>
+			var actions = _factories.Select(f =>
 				{
 					while (keysTaken.Contains(key))
 					{
@@ -73,17 +73,17 @@ namespace Scli.Command
 					}
 
 					var navigationKey = key.ToString();
-					var command = f.Invoke(navigationKey);
-					if (command.NavigationKey == navigationKey)
+					var action = f.Invoke(navigationKey);
+					if (action.NavigationKey == navigationKey)
 					{
 						_ = keysTaken.Add(key);
 					}
 
-					return command;
-				}).Concat(_commands)
-				.Select(c => (command: c, index: UInt32.TryParse(c.NavigationKey, out var i) ? i : UInt32.MaxValue))
+					return action;
+				}).Concat(_actions)
+				.Select(c => (action: c, index: UInt32.TryParse(c.NavigationKey, out var i) ? i : UInt32.MaxValue))
 				.OrderBy(t => t.index)
-				.Select(t => t.command)
+				.Select(t => t.action)
 				.ToArray();
 
 			_lastKey = key;
@@ -92,18 +92,18 @@ namespace Scli.Command
 				_ = _keysTaken.Add(keyTaken);
 			}
 
-			return commands;
+			return actions;
 		}
 
-		public CommandCollectionBuilder<T> Build(out IEnumerable<T> commands)
+		public CommandCollectionBuilder<T> Build(out IEnumerable<T> actions)
 		{
-			commands = Build();
+			actions = Build();
 			return this;
 		}
 		public CommandCollectionBuilder<T> Reset()
 		{
 			_factories.Clear();
-			_commands.Clear();
+			_actions.Clear();
 			_keysTaken.Clear();
 			_lastKey = 0;
 
